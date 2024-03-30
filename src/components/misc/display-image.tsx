@@ -1,5 +1,5 @@
-import '../../public/Outdoor.png'
-import '../../public/LogoSlogan.png'
+import '../../../public/Outdoor.png'
+import '../../../public/LogoSlogan.png'
 
 interface DisplayImageProps {
   type: "logo" | "outdoor"

@@ -1,6 +1,6 @@
-import DisplayImage from '@/components/display-image';
-import GithubButton from '@/components/github-button';
-import PrimaryButton from '@/components/primary-button'
+import DisplayImage from '@/components/misc/display-image';
+import GithubButton from '@/components/buttons/github-button';
+import PrimaryButton from '@/components/buttons/primary-button'
 import { ArrowRightCircleIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/solid';
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <main className='h-screen grid grid-rows-3 gap-4 p-8 bg-slate-50'>
-      <div className='row-span-2 overflow-hidden w-full h-full rounded-3xl bg-blue-600'>
+      <div className='row-span-2 overflow-hidden w-full h-full rounded-3xl'>
         <DisplayImage type='outdoor' />
       </div>
       <div className='row-span-1 flex items-center justify-between align-middle'>
