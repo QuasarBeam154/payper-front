@@ -6,7 +6,7 @@ interface DisplayImageProps {
   className?: string
 }
 
-function DisplayImage({ type, className }: DisplayImageProps) {
+const DisplayImage = ({ type, className }: DisplayImageProps) => {
   switch (type) {
     case "logo": {
       return <img src="LogoSlogan.png" alt="Payper: Sua folha em boas mãos." className={className}></img>
