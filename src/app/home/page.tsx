@@ -1,13 +1,32 @@
 'use client'
 
-import React from 'react';
+import React, { useState } from 'react';
 import * as Form from "@radix-ui/react-form";
 import * as Select from '@radix-ui/react-select';
 import DisplayImage from '@/components/misc/display-image';
 import TertiaryButton from '@/components/buttons/tertiary-button';
-import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { CheckIcon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import PrimaryButton from '@/components/buttons/primary-button';
+import checkboxList from './misc/checkbox-list';
+import * as Checkbox from '@radix-ui/react-checkbox';
 
 const PayrollPage = () => {
+
+  const [items, setItems] = useState(checkboxList);
+
+  function handleChange(e: any) {
+    const newItems = items.map(item => {
+      if (item.id === e.target.id) {
+        return {
+          ...item,
+          checked: e.target.checked
+        }
+      }
+      return item;
+    })
+    setItems(newItems);
+  }
+
   return (
     <main className="grid grid-rows-9 w-screen h-screen bg-slate-50">
       {/* Header */}
@@ -106,12 +125,30 @@ const PayrollPage = () => {
               </div>
             </div>
           </Form.Field>
-          <h1 className='mt-2 text-2xl font-semibold leading-none text-slate-600'>Outros</h1>
+          <div>
+            <h1 className='mb-2 text-2xl font-semibold leading-none text-slate-600'>Outros</h1>
+            <div className='grid grid-cols-2 gap-4'>
+              {items && items.map((item, i) => (
+                <Form.Field name={item.name}>
+                  <div className='flex items-center gap-3'>
+                    <Form.Control asChild>
+                      <Checkbox.Root id={item.id} className='shadow-black/30 ring-2 ring-slate-400 hover:bg-slate-200 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-lg bg-white shadow-[0_2px_10px] outline-none focus:ring-2 focus:ring-blue-500'>
+                        <Checkbox.Indicator className='text-blue-500'>
+                          <CheckIcon />
+                        </Checkbox.Indicator>
+                      </Checkbox.Root>
+                    </Form.Control>
+                    <h3 className='text-lg font-medium text-slate-500'>{item.label}</h3>
+                  </div>
+                </Form.Field>
+              ))}
+            </div>
+          </div>
+
         </Form.Root>
       </div>
       {/* Footer */}
       <div className='row-span-1'>
-
       </div>
     </main>
   )
