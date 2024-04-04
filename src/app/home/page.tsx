@@ -51,7 +51,7 @@ const PayrollPage = () => {
                 <Select.Root required>
                   <Select.Trigger className='flex w-full px-6 py-4 justify-between items-center rounded-lg ring-2 text-base leading-none outline-none select-none transition-all ease-in-out duration-700
                                           bg-slate-100  ring-slate-500 text-slate-500 focus:ring-blue-500'>
-                    <Select.Value placeholder='Selecione um funcionário...' className='select-none' />
+                    <Select.Value  placeholder='Selecione um funcionário...' className='select-none' />
                     <Select.Icon className='text-slate-500'>
                       <ChevronDownIcon className='w-5' />
                     </Select.Icon>
@@ -60,6 +60,7 @@ const PayrollPage = () => {
                     <Select.Viewport className=''>
                       <Select.Group className='font-medium text-slate-500'>
                         <Select.Label> Funcionários disponíveis </Select.Label>
+                        <Select.Item value='1'>Joao</Select.Item>
                       </Select.Group>
                     </Select.Viewport>
                   </Select.Content>
@@ -129,12 +130,12 @@ const PayrollPage = () => {
             <h1 className='mb-2 text-2xl font-semibold leading-none text-slate-600'>Outros</h1>
             <div className='grid grid-cols-2 gap-4'>
               {items && items.map((item, i) => (
-                <Form.Field name={item.name}>
+                <Form.Field key={i} name={item.name}>
                   <div className='flex items-center gap-3'>
                     <Form.Control asChild>
-                      <Checkbox.Root id={item.id} className='shadow-black/30 ring-2 ring-slate-400 hover:bg-slate-200 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-lg bg-white shadow-[0_2px_10px] outline-none focus:ring-2 focus:ring-blue-500'>
+                      <Checkbox.Root id={item.id} checked={item.checked} onChange={handleChange} className='shadow-black/30 ring-2 ring-slate-400 hover:bg-slate-200 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-lg bg-white shadow-[0_2px_10px] outline-none focus:ring-2 focus:ring-blue-500'>
                         <Checkbox.Indicator className='text-blue-500'>
-                          <CheckIcon />
+                          a
                         </Checkbox.Indicator>
                       </Checkbox.Root>
                     </Form.Control>
