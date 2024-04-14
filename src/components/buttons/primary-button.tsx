@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, ReactNode } from "react"
 
 interface PrimaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string
-  children: ReactNode
+  children?: ReactNode
 }
 
 const PrimaryButton = ({ label, children, ...rest }: PrimaryButtonProps) => {

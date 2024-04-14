@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, ReactNode } from "react"
 
 interface TertiaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string
-  children: ReactNode
+  children?: ReactNode
 }
 
 const TertiaryButton = ({ label, children, ...rest }: TertiaryButtonProps) => {

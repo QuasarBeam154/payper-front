@@ -1,11 +1,12 @@
+'use client'
 import DisplayImage from '@/components/misc/display-image';
 import GithubButton from '@/components/buttons/github-button';
 import PrimaryButton from '@/components/buttons/primary-button'
 import { ArrowRightCircleIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/solid';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-
-
+  const router = useRouter(); 
 
   return (
     <main className='h-screen grid grid-rows-3 gap-4 p-8 bg-slate-50'>
@@ -18,7 +19,7 @@ export default function Home() {
           <GithubButton label='Github' href='https://github.com/QuasarBeam154/payper-front'>
             <ArrowTopRightOnSquareIcon className='text-slate-50 w-12' />
           </GithubButton>
-          <PrimaryButton label='Iniciar'>
+          <PrimaryButton label='Iniciar' onClick={() => router.push('/home')}>
             <ArrowRightCircleIcon className='text-slate-50 w-12' />
           </PrimaryButton>
         </div>
