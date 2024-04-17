@@ -1,34 +1,46 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Form from "@radix-ui/react-form";
 import * as Select from '@radix-ui/react-select';
 import DisplayImage from '@/components/misc/display-image';
 import TertiaryButton from '@/components/buttons/tertiary-button';
 import { CheckIcon, ChevronDownIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/solid';
-import PrimaryButton from '@/components/buttons/primary-button';
-import checkboxList from './misc/checkbox-list';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import SecondaryButton from '@/components/buttons/secondary-button';
 import { useRouter } from 'next/navigation';
+import { apiUrl, employeeObjects } from '@/api/dataFetch';
+import { SelectItem } from '@/components/misc/SelectItem';
 
-const PayrollPage = () => {
+const HomePage = () => {
 
   const router = useRouter();
-  const [items, setItems] = useState(checkboxList);
+  const [employee, setEmployee] = useState<employeeObjects[]>([]);
 
-  function handleChange(e: any) {
-    const newItems = items.map(item => {
-      if (item.id === e.target.id) {
-        return {
-          ...item,
-          checked: e.target.checked
-        }
-      }
-      return item;
-    })
-    setItems(newItems);
+  const submitForm = (data: any) => {
+    router.push('/payroll')
+    console.log(data)
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(apiUrl + '/employees?namesAndIdsOnly=true');
+        if (!response.ok) {
+          throw new Error('Erro ao carregar os dados');
+        }
+        const jsonData = await response.json();
+        setEmployee(jsonData);
+      } catch (error) {
+        console.error('Erro:', error);
+      }
+    };
+
+    fetchData();
+  }, []); // Chamará apenas uma vez quando o componente montar
+
+  // Exibir os dados no console
+  console.log('Dados:', employee);
 
   return (
     <main className="grid grid-rows-9 w-screen h-screen bg-slate-50">
@@ -45,7 +57,16 @@ const PayrollPage = () => {
       </div>
       {/* Content */}
       <div className='row-span-6 px-[30%]'>
-        <Form.Root className='flex flex-col gap-6'>
+        <Form.Root className='flex flex-col gap-6'
+          onSubmit={(event) => {
+            const formData = Object.fromEntries(new FormData(event.currentTarget));
+
+            submitForm(formData)
+
+            // Prevent default form submission
+            event.preventDefault();
+          }}
+        >
           {/* Employee */}
           <Form.Field name='employee'>
             <div>
@@ -59,15 +80,13 @@ const PayrollPage = () => {
                       <ChevronDownIcon className='w-5' />
                     </Select.Icon>
                   </Select.Trigger>
-                  <Select.Content position='popper' className='w-[--radix-select-trigger-width] overflow-hidden rounded-lg ring-2 ring-slate-300 bg-slate-100 shadow-xl'>
-                    <Select.Viewport className=''>
+                  <Select.Content position='popper' className='w-[--radix-select-trigger-width] h-96 overflow-hidden rounded-lg ring-2 ring-slate-300 bg-slate-100 shadow-xl'>
+                    <Select.Viewport className='h-96'>
                       <Select.Group className='font-medium text-slate-500'>
                         <Select.Label className='p-3 font-semibold'> Funcionários disponíveis </Select.Label>
-                        <Select.Item value='1' className='p-3 hover:bg-blue-200 outline-none transition-colors ease-in-out duration-300'>Joao</Select.Item>
-                        <Select.Item value='2' className='p-3 hover:bg-blue-200 outline-none transition-colors ease-in-out duration-300'>Joaoo</Select.Item>
-                        <Select.Item value='3' className='p-3 hover:bg-blue-200 outline-none transition-colors ease-in-out duration-300'>Joaoooo</Select.Item>
-                        <Select.Item value='4' className='p-3 hover:bg-blue-200 outline-none transition-colors ease-in-out duration-300'>Joaooooo</Select.Item>
-                        <Select.Item value='5' className='p-3 hover:bg-blue-200 outline-none transition-colors ease-in-out duration-300'>Joaoooooo</Select.Item>
+                        {employee && employee.map((item, i) => {
+                          return <SelectItem key={i} value={item.id} id={item.id}>{item.nome}</SelectItem>
+                        })}
                       </Select.Group>
                     </Select.Viewport>
                   </Select.Content>
@@ -133,26 +152,74 @@ const PayrollPage = () => {
               </div>
             </div>
           </Form.Field>
+
+          {/* Insalubridade e periculosidade */}
+          <div>
+            <h1 className='mb-2 text-2xl font-semibold leading-none text-slate-600'>Insalubridade e Periculosidade</h1>
+            <Form.Field name='insalubrity_periculosity'>
+              <div>
+                <div className='flex gap-3 items-center'>
+                  <input id='r1' type="radio" name='insalubrity_periculosity' value='insalubrity' />
+                  <label htmlFor="r1" className='text-lg font-medium text-slate-500'>Insalubridade</label>
+                </div>
+                <div className='flex gap-3 items-center'>
+                  <input id='r2' type="radio" name='insalubrity_periculosity' value='periculosity' />
+                  <label htmlFor="r2" className='text-lg font-medium text-slate-500'>Periculosidade</label>
+                </div>
+              </div>
+            </Form.Field>
+          </div>
+
+          {/* Outros */}
           <div>
             <h1 className='mb-2 text-2xl font-semibold leading-none text-slate-600'>Outros</h1>
             <div className='grid grid-cols-2 gap-y-4 gap-x-10'>
-              {items && items.map((item, i) => (
-                <Form.Field key={i} name={item.name}>
-                  <div className='flex items-center gap-3'>
-                    <Form.Control asChild>
-                      <Checkbox.Root id={item.id} checked={item.checked} onCheckedChange={() => {handleChange; console.log(items)}} className='shadow-black/30 ring-2 ring-slate-400 hover:bg-slate-200 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-lg bg-white shadow-[0_2px_10px] outline-none focus:ring-2 focus:ring-blue-500'>
-                        <Checkbox.Indicator asChild className='text-blue-500'>
-                          <CheckIcon className='w-5' style={{stroke: 'ActiveBorder', strokeWidth: 2}} />
-                        </Checkbox.Indicator>
-                      </Checkbox.Root>
-                    </Form.Control>
-                    <h3 className='text-lg font-medium text-slate-500'>{item.label}</h3>
-                  </div>
-                </Form.Field>
-              ))}
+
+              {/* Vale Alimentação */}
+              <Form.Field name="va">
+                <div className='flex items-center gap-3'>
+                  <Form.Control asChild>
+                    <Checkbox.Root id='c1' className='shadow-black/30 ring-2 ring-slate-400 hover:bg-slate-200 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-lg bg-white shadow-[0_2px_10px] outline-none focus:ring-2 focus:ring-blue-500'>
+                      <Checkbox.Indicator asChild className='text-blue-500'>
+                        <CheckIcon className='w-5' style={{ stroke: 'ActiveBorder', strokeWidth: 2 }} />
+                      </Checkbox.Indicator>
+                    </Checkbox.Root>
+                  </Form.Control>
+                  <label className='text-lg font-medium text-slate-500' htmlFor="c1">Vale Alimentação</label>
+                </div>
+              </Form.Field>
+
+              {/* Vale Transporte */}
+              <Form.Field name="vt">
+                <div className='flex items-center gap-3'>
+                  <Form.Control asChild>
+                    <Checkbox.Root id='c2' className='shadow-black/30 ring-2 ring-slate-400 hover:bg-slate-200 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-lg bg-white shadow-[0_2px_10px] outline-none focus:ring-2 focus:ring-blue-500'>
+                      <Checkbox.Indicator asChild className='text-blue-500'>
+                        <CheckIcon className='w-5' style={{ stroke: 'ActiveBorder', strokeWidth: 2 }} />
+                      </Checkbox.Indicator>
+                    </Checkbox.Root>
+                  </Form.Control>
+                  <label className='text-lg font-medium text-slate-500' htmlFor="c2">Vale Transporte</label>
+                </div>
+              </Form.Field>
+
+              {/* Adicional noturno */}
+              <Form.Field name="an">
+                <div className='flex items-center gap-3'>
+                  <Form.Control asChild>
+                    <Checkbox.Root id='c3' className='shadow-black/30 ring-2 ring-slate-400 hover:bg-slate-200 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-lg bg-white shadow-[0_2px_10px] outline-none focus:ring-2 focus:ring-blue-500'>
+                      <Checkbox.Indicator asChild className='text-blue-500'>
+                        <CheckIcon className='w-5' style={{ stroke: 'ActiveBorder', strokeWidth: 2 }} />
+                      </Checkbox.Indicator>
+                    </Checkbox.Root>
+                  </Form.Control>
+                  <label className='text-lg font-medium text-slate-500' htmlFor="c3">Adicional Noturno</label>
+                </div>
+              </Form.Field>
             </div>
           </div>
-         
+
+          {/* Concluir Formulário */}
           <div className='flex w-full justify-end'>
             <Form.Submit asChild>
               <SecondaryButton label={'Gerar folha'} children={<ChevronRightIcon className='w-5 text-slate-50' />} className='flex justify-end' />
@@ -164,4 +231,4 @@ const PayrollPage = () => {
   )
 }
 
-export default PayrollPage
+export default HomePage
