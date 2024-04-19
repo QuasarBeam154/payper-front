@@ -18,6 +18,7 @@ export interface discountDTO {
   auxilioCreche: Number
   adicionalNoturno: Number
   diariaViagens: Number
+  valorTotal: Number
 }
 
 export interface employerDTO {

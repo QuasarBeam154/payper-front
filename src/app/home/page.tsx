@@ -29,6 +29,7 @@ const HomePage = () => {
 
 
     const formObject = Object.fromEntries(form.entries());
+    console.log(formObject)
 
     // Converte os dados para JSON
     const jsonPostData = JSON.stringify(formObject);
@@ -179,11 +180,11 @@ const HomePage = () => {
             <Form.Field name='insalubridadePericulosidade'>
               <div>
                 <div className='flex gap-3 items-center'>
-                  <input id='r1' type="radio" name='insalubrity_periculosity' value='insalubrity' />
+                  <input id='r1' type="radio" name='insalubridadePericulosidade' value='insalubrity' />
                   <label htmlFor="r1" className='text-lg font-medium text-slate-500'>Insalubridade</label>
                 </div>
                 <div className='flex gap-3 items-center'>
-                  <input id='r2' type="radio" name='insalubrity_periculosity' value='periculosity' />
+                  <input id='r2' type="radio" name='insalubridadePericulosidade' value='periculosity' />
                   <label htmlFor="r2" className='text-lg font-medium text-slate-500'>Periculosidade</label>
                 </div>
               </div>

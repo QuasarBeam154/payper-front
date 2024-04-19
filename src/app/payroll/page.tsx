@@ -40,72 +40,86 @@ const PayrollPage = () => {
   if (!router) return null; // Se o router não estiver definido, retorna null
 
   return (
-    <main className="flex flex-col items-center justify-center w-screen h-screen bg-slate-50">
+    <main className="flex flex-col items-centers w-screen h-screen bg-slate-50">
       {/* Header */}
-      <div className='flex justify-between items-center mb-8 px-24 w-full'>
+      <div className='flex justify-between items-center mb-12 mt-6 px-24 w-full'>
         <DisplayImage type='logo' className='w-64 h-auto' />
         <TertiaryButton label='Sair' onClick={() => router.push('/')}>
           <XMarkIcon className='w-6' />
         </TertiaryButton>
       </div>
+      <div className='flex flex-col items-center'>
+        {/* Title */}
+        <h1 className='mb-8 text-5xl font-bold text-slate-600'>Recibo de Pagamento</h1>
 
-      {/* Title */}
-      <h1 className='mb-8 text-5xl font-bold text-slate-600'>Recibo de Pagamento</h1>
-
-      {/* Content */}
-      <div className='w-[80%] overflow-x-auto'>
-        <table className="w-full border-collapse bg-white rounded-lg shadow-md">
-          <thead>
-            <tr className="bg-gray-200 border-b border-gray-400">
-              <th colSpan={9} className="py-2 text-lg font-semibold">Razão Social | Endereço</th>
-              <th colSpan={5} className="py-2 text-lg font-semibold">Mês de Referência</th>
-            </tr>
-            <tr className="bg-gray-200 border-b border-gray-400">
-              <th colSpan={9} className="py-2 text-lg font-semibold">Insira o CNPJ</th>
-              <th colSpan={5} className="py-2 text-lg font-semibold">Insira a Data</th>
-            </tr>
-            <tr>
-              <th colSpan={9} className='py-2 text-lg font-semibold'>00.000.000/0001-00</th>
-              <th colSpan={5} className="py-2 text-lg font-semibold">19/04/2024</th>
-            </tr>
-            <tr className="bg-gray-200 border-b border-gray-400 text-center">
-              <th className="py-2 text-lg font-semibold w-[10%]">Matrícula</th>
-              <th className="py-2 text-lg font-semibold w-[20%]">Nome do Funcionário</th>
-              <th className="py-2 text-lg font-semibold w-[5%]">CBO</th>
-              <th className="py-2 text-lg font-semibold w-[15%]">Cargo</th>
-              <th className="py-2 text-lg font-semibold w-[5%]">Empresa</th>
-              <th className="py-2 text-lg font-semibold w-[5%]">Local</th>
-              <th className="py-2 text-lg font-semibold w-[10%]">Depto</th>
-              <th className="py-2 text-lg font-semibold w-[10%]">Seção / Folha</th>
-              <th className="py-2 text-lg font-semibold w-[10%]">Vencimentos</th>
-              <th className="py-2 text-lg font-semibold w-[10%]">Descontos</th>
-              <th className="py-2 text-lg font-semibold w-[10%]">Valor</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Conteúdo da tabela */}
-            {discounts && discounts.map((item, i) => (
-              <tr key={i} className="border-b border-gray-400 text-center">
-                <td className="py-2">{item.adiantamento}</td>
-                <td className="py-2">{item.nome}</td>
-                <td className="py-2">{item.cbo}</td>
-                <td className="py-2">{item.cargo}</td>
-                <td className="py-2">{item.empresa}</td>
-                <td className="py-2">{item.local}</td>
-                <td className="py-2">{item.depto}</td>
-                <td className="py-2">{item.secao}</td>
-                <td className="py-2">{item.vencimentos}</td>
-                <td className="py-2">{item.descontos}</td>
-                <td className="py-2">{item.valor}</td>
+        {/* Content */}
+        <div className='w-[80%] overflow-x-auto'>
+          <table className="w-full border-collapse bg-white rounded-lg shadow-md">
+            <thead>
+              {/* Cabeçalho com duas linhas */}
+              <tr className="bg-gray-200 border-b border-gray-400 text-center">
+                <th className="py-2 text-lg font-semibold" colSpan={2}>Placeholder Nome do Funcionário</th>
               </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            {/* Rodapé da tabela */}
-          </tfoot>
-        </table>
-        <div className="py-4 text-lg text-center">
-          DECLARO TER RECEBIDO DE: NOME DA EMPRESA | CNPJ DA EMPRESA | ENDEREÇO DA EMPRESA, A QUANTIA LÍQUIDA ACIMA
+              <tr className="bg-gray-200 border-b border-gray-400 text-center">
+                <th className="py-2 text-lg font-semibold" colSpan={2}>Placeholder Nome da Empresa</th>
+              </tr>
+              {/* Cabeçalho das colunas */}
+              <tr className="bg-gray-200 border-b border-gray-400 text-center">
+                <th className="py-2 text-lg font-semibold"> </th>
+                <th className="py-2 text-lg font-semibold">Placeholder Descontos</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Corpo da tabela com 15 linhas */}
+              {discounts && discounts.map((item, i) => (
+                <tr key={i} className="border-b border-gray-400 text-center">
+                  <td className="py-2">
+                    {/* Primeira coluna com nomes dos descontos */}
+                    {i === 0 && "Adiantamento"}
+                    {i === 1 && "Vale Alimentação"}
+                    {i === 2 && "Vale Transporte"}
+                    {i === 3 && "Adicional Insalubridade"}
+                    {i === 4 && "Adicional Periculosidade"}
+                    {i === 5 && "Adicional Noturno"}
+                    {i === 6 && "Auxílio Creche"}
+                    {i === 7 && "Salário Família"}
+                    {i === 8 && "Horas Déficit"}
+                    {i === 9 && "Diárias de Viagem"}
+                    {i === 10 && "FGTS"}
+                    {i === 11 && "INSS"}
+                    {i === 12 && "Sindical"}
+                    {i === 13 && "IRRF"}
+                    {i === 14 && "Total"}
+                  </td>
+                  <td className="py-2">
+                    {/* Segunda coluna com valores mapeados do array */}
+                    {i === 14 ? item.valorTotal.toString() :
+                      i === 0 ? item.adiantamento.toString() :
+                        i === 1 ? item.valeAlimentacao.toString() :
+                          i === 2 ? item.valeTransporte.toString() :
+                            i === 3 ? item.adicionalInsalubridade.toString() :
+                              i === 4 ? item.adicionalPericulosidade.toString() :
+                                i === 5 ? item.adicionalNoturno.toString() :
+                                  i === 6 ? item.auxilioCreche.toString() :
+                                    i === 7 ? item.salarioFamilia.toString() :
+                                      i === 8 ? item.horasDeficit.toString() :
+                                        i === 9 ? item.diariaViagens.toString() :
+                                          i === 10 ? item.fgts.toString() :
+                                            i === 11 ? item.inss.toString() :
+                                              i === 12 ? item.sindical.toString() :
+                                                item.irrf.toString()
+                    }
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              {/* Rodapé da tabela */}
+            </tfoot>
+          </table>
+          <div className="py-4 text-lg text-center">
+            DECLARO TER RECEBIDO DE: NOME DA EMPRESA | CNPJ DA EMPRESA | ENDEREÇO DA EMPRESA, A QUANTIA LÍQUIDA ACIMA
+          </div>
         </div>
       </div>
     </main>
