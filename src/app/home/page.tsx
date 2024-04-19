@@ -9,34 +9,61 @@ import { CheckIcon, ChevronDownIcon, ChevronRightIcon, XMarkIcon } from '@heroic
 import * as Checkbox from '@radix-ui/react-checkbox';
 import SecondaryButton from '@/components/buttons/secondary-button';
 import { useRouter } from 'next/navigation';
-import { apiUrl, employeeObjects } from '@/api/dataFetch';
+import { apiUrl, employeeDTO, fetchData } from '@/api/dataFetch';
 import { SelectItem } from '@/components/misc/SelectItem';
 
 const HomePage = () => {
 
   const router = useRouter();
-  const [employee, setEmployee] = useState<employeeObjects[]>([]);
+  const [employee, setEmployee] = useState<employeeDTO[]>([]);
 
-  const submitForm = (data: any) => {
-    router.push('/payroll')
-    console.log(data)
-  }
+
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+
+    // FormData para coletar os dados do formulário
+    const form = new FormData(event.target);
+
+    const employeeId = form.get('employee');
+    console.log("ID DO FUNCOIINARIO: "+ employeeId);
+
+
+    const formObject = Object.fromEntries(form.entries());
+
+    // Converte os dados para JSON
+    const jsonPostData = JSON.stringify(formObject);
+
+    try {
+      const response = await fetch(apiUrl+'/form-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonPostData,
+      });
+
+      if (response.ok) {
+        // Requisição bem-sucedida
+        console.log('foi')
+        const data = await response.json();
+        console.log('Dados enviados com sucesso:', data);
+
+        // Vai para a próxima página e passa o id como parâmetro URL
+        router.push(`/payroll?id=${employeeId}`);
+      } else {
+        console.error('Erro na requisição:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erro ao enviar dados:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(apiUrl + '/employees?namesAndIdsOnly=true');
-        if (!response.ok) {
-          throw new Error('Erro ao carregar os dados');
-        }
-        const jsonData = await response.json();
-        setEmployee(jsonData);
-      } catch (error) {
-        console.error('Erro:', error);
-      }
-    };
-
-    fetchData();
+    const getEmployee = async () =>{
+      const employee = await fetchData('/employees?namesAndIdsOnly=true');
+      setEmployee(employee);
+    }
+    getEmployee();
   }, []); // Chamará apenas uma vez quando o componente montar
 
   // Exibir os dados no console
@@ -58,14 +85,7 @@ const HomePage = () => {
       {/* Content */}
       <div className='row-span-6 px-[30%]'>
         <Form.Root className='flex flex-col gap-6'
-          onSubmit={(event) => {
-            const formData = Object.fromEntries(new FormData(event.currentTarget));
-
-            submitForm(formData)
-
-            // Prevent default form submission
-            event.preventDefault();
-          }}
+          onSubmit={handleSubmit}
         >
           {/* Employee */}
           <Form.Field name='employee'>
@@ -96,7 +116,7 @@ const HomePage = () => {
           </Form.Field>
 
           {/* Adiantamento */}
-          <Form.Field name='advance_money'>
+          <Form.Field name='adiantamento'>
             <div>
               <h1 className='mb-2 text-2xl font-semibold leading-none text-slate-600'>Adiantamento</h1>
               <Form.Control asChild>
@@ -108,7 +128,7 @@ const HomePage = () => {
           </Form.Field>
 
           {/* Comissão */}
-          <Form.Field name='comission'>
+          <Form.Field name='comissao'>
             <div>
               <h1 className='mb-2 text-2xl font-semibold leading-none text-slate-600'>Comissão</h1>
               <Form.Control asChild>
@@ -120,7 +140,7 @@ const HomePage = () => {
           </Form.Field>
 
           {/* Hora extra */}
-          <Form.Field name='extra_hour'>
+          <Form.Field name='horasExtras'>
             <div>
               <h1 className='mb-2 text-2xl font-semibold leading-none text-slate-600'>Hora Extra</h1>
               <div className='flex w-full items-center'>
@@ -137,7 +157,7 @@ const HomePage = () => {
           </Form.Field>
 
           {/* Faltas/Atrasos */}
-          <Form.Field name='arrears'>
+          <Form.Field name='faltasAtrasos'>
             <div>
               <h1 className='mb-2 text-2xl font-semibold leading-none text-slate-600'>Faltas ou atrasos</h1>
               <div className='flex w-full items-center'>
@@ -156,7 +176,7 @@ const HomePage = () => {
           {/* Insalubridade e periculosidade */}
           <div>
             <h1 className='mb-2 text-2xl font-semibold leading-none text-slate-600'>Insalubridade e Periculosidade</h1>
-            <Form.Field name='insalubrity_periculosity'>
+            <Form.Field name='insalubridadePericulosidade'>
               <div>
                 <div className='flex gap-3 items-center'>
                   <input id='r1' type="radio" name='insalubrity_periculosity' value='insalubrity' />

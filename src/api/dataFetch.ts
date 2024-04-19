@@ -1,17 +1,29 @@
-export interface employeeObjects {
+export interface employeeDTO {
   id: string
-  nome: string;
+  nome: string
 }
-export interface formDataObjects {
-  employee: string;
-  advance_money: string;
-  comission: string;
-  extra_hour: string;
-  arrears: string;
-  insalubrity_periculosity: string;
-  va: boolean;
-  vt: boolean;
-  an: boolean;
+
+export interface discountDTO {
+  inss: Number
+  sindical: Number
+  fgts: Number
+  valeAlimentacao: Number
+  valeTransporte: Number
+  irrf: Number
+  adiantamento: Number
+  horasDeficit: Number
+  adicionalInsalubridade: Number
+  adicionalPericulosidade: Number
+  salarioFamilia: Number
+  auxilioCreche: Number
+  adicionalNoturno: Number
+  diariaViagens: Number
+}
+
+export interface employerDTO {
+  nome: string
+  CNPJ: string
+  endereco: string
 }
 
 export const apiUrl = 'http://localhost:3002/api'
@@ -23,24 +35,4 @@ export const fetchData = async (endpoint: string) => {
   }
   const jsonData = await response.json();
   return jsonData;
-};
-
-
-export const getDiscounts = async (formData: formDataObjects) => {
-  try {
-    const response = await fetch(apiUrl + '/discounts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-    if (!response.ok) {
-      throw new Error('Erro ao obter descontos');
-    }
-    const jsonData = await response.json();
-    return jsonData;
-  } catch (error) {
-    throw new Error('Erro ao obter descontos: ' + (error instanceof Error ? error.message : 'Erro desconhecido'));
-  }
 };

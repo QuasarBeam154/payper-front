@@ -1,31 +1,33 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import DisplayImage from "@/components/misc/display-image";
 import TertiaryButton from "@/components/buttons/tertiary-button";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { getDiscounts } from "@/api/dataFetch"; // Importe a função para fazer a solicitação ao backend
-import { fetchData } from '@/api/dataFetch';
+import { discountDTO, employerDTO, fetchData } from '@/api/dataFetch';
 
 const PayrollPage = () => {
-  const router = typeof window !== 'undefined' ? useRouter() : null;
-  const [discounts, setDiscounts] = useState<any>(null); // Estado para armazenar os descontos
-  
+  const router = useRouter();
+  const searchParams = useSearchParams(); // Acessar os parâmetros de consulta da URL
+  const [discounts, setDiscounts] = useState<discountDTO[]>([]); // Estado para armazenar os descontos
+  const [employer, setEmployer] = useState<employerDTO[]>([]); // Estado para armazenar o empregador
+
   useEffect(() => {
     // Verifica se o router está definido
-    if (!router) return;
+    if (!router) return; // Verifica se o router está pronto para uso 
 
     // Função para calcular os descontos com base no funcionário selecionado
     const calculateDiscounts = async () => {
       try {
         // Recupere o ID do funcionário da query da rota
-        const { id } = router.query;
-        
+        const id = searchParams.get('id'); // Obtém o parâmetro de consulta 'id'
+        console.log(id);
         // Verifica se o ID do funcionário está presente
         if (id) {
           // Faça a chamada à API para obter os descontos
           const response = await fetchData(`/discounts/${id}`);
           setDiscounts(response); // Atualize o estado com os descontos obtidos
+          console.log(discounts);
         }
       } catch (error) {
         console.error('Erro ao calcular descontos:', error);
@@ -33,26 +35,26 @@ const PayrollPage = () => {
     };
 
     calculateDiscounts(); // Chame a função para calcular os descontos quando o componente montar
-  }, [router]); // Execute o efeito sempre que o router mudar
+  }, [searchParams]); // Execute o efeito sempre que o parametro mudar
 
   if (!router) return null; // Se o router não estiver definido, retorna null
 
   return (
     <main className="flex flex-col items-center justify-center w-screen h-screen bg-slate-50">
-    {/* Header */}
-    <div className='flex justify-between items-center mb-8 px-24 w-full'>
-      <DisplayImage type='logo' className='w-64 h-auto' />
-      <TertiaryButton label='Sair' onClick={() => router.push('/')}>
-        <XMarkIcon className='w-6' />
-      </TertiaryButton>
-    </div>
+      {/* Header */}
+      <div className='flex justify-between items-center mb-8 px-24 w-full'>
+        <DisplayImage type='logo' className='w-64 h-auto' />
+        <TertiaryButton label='Sair' onClick={() => router.push('/')}>
+          <XMarkIcon className='w-6' />
+        </TertiaryButton>
+      </div>
 
-    {/* Title */}
-    <h1 className='mb-8 text-5xl font-bold text-slate-600'>Recibo de Pagamento</h1>
+      {/* Title */}
+      <h1 className='mb-8 text-5xl font-bold text-slate-600'>Recibo de Pagamento</h1>
 
-    {/* Content */}
-    <div className='w-[80%] overflow-x-auto'>
-      <table className="w-full border-collapse bg-white rounded-lg shadow-md">
+      {/* Content */}
+      <div className='w-[80%] overflow-x-auto'>
+        <table className="w-full border-collapse bg-white rounded-lg shadow-md">
           <thead>
             <tr className="bg-gray-200 border-b border-gray-400">
               <th colSpan={9} className="py-2 text-lg font-semibold">Razão Social | Endereço</th>
@@ -82,9 +84,9 @@ const PayrollPage = () => {
           </thead>
           <tbody>
             {/* Conteúdo da tabela */}
-            {discounts && discounts.map((item: any, index: number) => (
-              <tr key={index} className="border-b border-gray-400 text-center">
-                <td className="py-2">{item.matricula}</td>
+            {discounts && discounts.map((item, i) => (
+              <tr key={i} className="border-b border-gray-400 text-center">
+                <td className="py-2">{item.adiantamento}</td>
                 <td className="py-2">{item.nome}</td>
                 <td className="py-2">{item.cbo}</td>
                 <td className="py-2">{item.cargo}</td>
